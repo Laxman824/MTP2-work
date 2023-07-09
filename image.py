@@ -6,8 +6,8 @@ import numpy as np
 import json
 
 pdf_file = '/home/ravi/Desktop/Layout Parser/mergedone1.pdf' # Replace with the path to your PDF file  pdffile name:TB10_MultiColumnTable.pdf
-output_dir = '/home/ravi/Desktop/Layout Parser' # Replace with the path to your output directory
-json_file = '/home/ravi/Desktop/Layout Parser/output.json' # Replace with the path to your JSON file
+output_dir = '/home/ravi/Desktop/Layout Parser/cropped/' # Replace with the path to your output directory
+json_file = '/home/ravi/Desktop/Layout Parser/cropped/output.json' # Replace with the path to your JSON file
 
 class val:
     def __init__(self, imgName, x1 , x2 , y1 , y2):
@@ -59,7 +59,7 @@ def func() :
                 # Crop image around the detected layout
                 segment_image = (blocks.crop_image(open_cv_image))
                 # save image
-                path = output_dir+'/table_'+str(k+1)+'_'+str(y)+'.jpg'
+                path = output_dir+'/page_'+str(k+1)+'table_'+str(y)+'.jpg'
                 status = cv2.imwrite(path,segment_image)
                 print("Image written to file-system : ",status)
                 list.append(val('table_'+str(k+1)+'_'+str(y)+":", blocks.block.x_1 ,blocks.block.x_2,blocks.block.y_1,blocks.block.y_2))
@@ -70,10 +70,6 @@ def func() :
             for obj in list:
                 print(obj.imgName,obj.x1,obj.x2,obj.y1,obj.y2, sep=' ')
                 myset.add(obj);
-
-#             print("")
-#             print("")
-#             print("")
 
             plt.imshow(segment_image)
 

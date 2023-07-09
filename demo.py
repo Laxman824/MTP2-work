@@ -331,148 +331,20 @@ start_time = time.time()
 def htmlPostProcess(text):
     text = '<html><body><table>' + text + '</table></body></html>'
     return text
-"""
-if __name__ == '__main__':
 
-    parser = ArgumentParser()
-    parser.add_argument('--tablemaster_config', type=str,
-                        default='./configs/textrecog/master/table_master_ResnetExtract_Ranger_0705_cell150_batch4.py',
-                        help='tablemaster config file')
-    parser.add_argument('--tablemaster_checkpoint', type=str,
-                        default='/home/ravi/Desktop/MTL_tabnet/PubTabNet/epoch_19.pth',
-                        help='tablemaster checkpoint file')
-    parser.add_argument('--out_dir',
-                        type=str, default='/home/ravi/Desktop/MTL_tabnet/PubTabNet/', help='Dir to save results')
-    args = parser.parse_args()
 
-print("Time taken for Argument Parsing: %s seconds" % (time.time() - start_time))
-# start_time = time.time()
+#######################################
+# version4 this one need minimal changes while accepting the images 
+import os
 import sys
-import codecs
-sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
-"""
-# you want to pass the cropped table images from the first code snippet to the MTL-Tabnet code snippet. 
-# One way to do this is to save the cropped table images to a directory and then modify the MTL-Tabnet code 
-# to read the images from that directory. You can replace the img_path variable in the MTL-Tabnet code with the path to the directory
-# containing the cropped table images. You can then use a loop to iterate over all the images in that directory and pass them to the tablemaster_inference.predict_single_file function.
-# import os
+import time
+import json
+from argparse import ArgumentParser
+# from table_recognition.demo.structure_recognition import Structure_Recognition
+# from table_recognition.demo.utils import text_to_list, insert_text_to_token, deal_bb
+# import torch
 
-# Set img_dir to the path of the directory containing the cropped table images folder
-# img_dir = '/path/to/cropped/table/images' 
-
-# # table structure predict
-# tablemaster_inference = Structure_Recognition(args.tablemaster_config, args.tablemaster_checkpoint)
-
-# # Iterate over all images in img_dir
-# for img_name in os.listdir(img_dir):
-#     img_path = os.path.join(img_dir, img_name)
-#     tablemaster_result, tablemaster_result_dict = tablemaster_inference.predict_single_file(img_path)
-#     # Rest of the code
-
-"""
-#dir_path = '/home/ravi/Desktop/Layout Parser/image.py'
-
-#os.chdir(dir_path)
-#os.system('sudo python3 image.py')
-import subprocess
-
-subprocess.call(['python3', '/home/ravi/Desktop/Layout Parser/image.py'])
-
-
-img_path = './table_recognition/demo/7.png'
-
-img_name = '7.png'
-
-# table structure predict
-tablemaster_inference = Structure_Recognition(args.tablemaster_config, args.tablemaster_checkpoint)
-tablemaster_result, tablemaster_result_dict = tablemaster_inference.predict_single_file(img_path)
-torch.cuda.empty_cache()
-del tablemaster_inference
-print("Time taken for Table Structure Prediction: %s seconds" % (time.time() - start_time))
-pred_text = tablemaster_result_dict[img_name]['text']
-pred_cells = tablemaster_result_dict[img_name]['cell']
-pred_html = insert_text_to_token(text_to_list(pred_text), pred_cells)
-pred_html = deal_bb(pred_html, 'thead')
-pred_html = deal_bb(pred_html, 'tbody')
-
-# Add <table> at the start and </table> at the end of pred_html
-pred_html = '<table>' + pred_html + '</table>'
-
-# visualize bboxes
-visual_pred_bboxes(tablemaster_result_dict[img_name]['bbox'], img_name, './table_recognition/demo/', './table_recognition/demo/')
-
-with open(os.path.join('./table_recognition/demo/visual_pred_bboxes/', img_name.replace('.png', '.txt')), 'w') as f:
-    f.write(pred_html + '\n')
-print("Time taken for Visualization: %s seconds" % (time.time() - start_time))
-
-print(pred_html)
-
-
-    # save predict result
-    # for k in merged_results.keys():
-    #     html_file_path = os.path.join(args.out_dir, k.replace('.png', '.html'))
-    #     with open(html_file_path, 'w', encoding='utf-8') as f:
-    #         # write to html file
-    #         html_context = htmlPostProcess(merged_results[k])
-    #         f.write(html_context)
-
-    """
-#copy2 this is working fine "
-"""
-if __name__ == '__main__':
-
-    parser = ArgumentParser()
-    parser.add_argument('--tablemaster_config', type=str,
-                        default='./configs/textrecog/master/table_master_ResnetExtract_Ranger_0705_cell150_batch4.py',
-                        help='tablemaster config file')
-    parser.add_argument('--tablemaster_checkpoint', type=str,
-                        default='/home/ravi/Desktop/MTL_tabnet/PubTabNet/epoch_19.pth',
-                        help='tablemaster checkpoint file')
-    parser.add_argument('--out_dir',
-                        type=str, default='/home/ravi/Desktop/MTL_tabnet/PubTabNet/', help='Dir to save results')
-    args = parser.parse_args()
-
-    print("Time taken for Argument Parsing: %s seconds" % (time.time() - start_time))
-
-    import sys
-    import codecs
-    sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
-    import subprocess
-
-    subprocess.call(['python3', '/home/ravi/Desktop/Layout Parser/image.py'])
-
-    cropped_folder = '/home/ravi/Desktop/Layout Parser/cropped'
-    cropped_images = os.listdir(cropped_folder)
-
-    for img_name in cropped_images:
-        img_path = os.path.join(cropped_folder, img_name)
-
-        # table structure predict
-        tablemaster_inference = Structure_Recognition(args.tablemaster_config, args.tablemaster_checkpoint)
-        tablemaster_result, tablemaster_result_dict = tablemaster_inference.predict_single_file(img_path)
-        torch.cuda.empty_cache()
-        del tablemaster_inference
-        print("Time taken for Table Structure Prediction: %s seconds" % (time.time() - start_time))
-        pred_text = tablemaster_result_dict[img_name]['text']
-        pred_cells = tablemaster_result_dict[img_name]['cell']
-        pred_html = insert_text_to_token(text_to_list(pred_text), pred_cells)
-        pred_html = deal_bb(pred_html, 'thead')
-        pred_html = deal_bb(pred_html, 'tbody')
-
-        # Add <table> at the start and </table> at the end of pred_html
-        pred_html = '<table>' + pred_html + '</table>'
-
-        # visualize bboxes
-        visual_pred_bboxes(tablemaster_result_dict[img_name]['bbox'], img_name, './table_recognition/demo/', './table_recognition/demo/')
-
-        with open(os.path.join('./table_recognition/demo/visual_pred_bboxes/', img_name.replace('.png', '.txt')), 'w') as f:
-            f.write(pred_html + '\n')
-        print("Time taken for Visualization: %s seconds" % (time.time() - start_time))
-
-        print(pred_html)
-"""
-# version3 mapping has been done uisng output.json details and output of demo.py code html table element.
-import sys
+start_time = time.time()
 
 if len(sys.argv) > 1:
     img_path = sys.argv[1]
@@ -481,70 +353,71 @@ else:
     # Default values if no command-line argument is provided
     img_path = './table_recognition/demo/7.png'
     img_name = '7.png'
+
 if __name__ == '__main__':
 
-    parser = ArgumentParser()
-    parser.add_argument('--tablemaster_config', type=str,
-                        default='./configs/textrecog/master/table_master_ResnetExtract_Ranger_0705_cell150_batch4.py',
-                        help='tablemaster config file')
-    parser.add_argument('--tablemaster_checkpoint', type=str,
-                        default='/home/ravi/Desktop/MTL_tabnet/PubTabNet/epoch_19.pth',
-                        help='tablemaster checkpoint file')
-    parser.add_argument('--out_dir',
-                        type=str, default='/home/ravi/Desktop/MTL_tabnet/PubTabNet/', help='Dir to save results')
-    args = parser.parse_args()
+        parser = ArgumentParser()
+        parser.add_argument('--tablemaster_config', type=str,
+                            default='./configs/textrecog/master/table_master_ResnetExtract_Ranger_0705_cell150_batch4.py',
+                            help='tablemaster config file')
+        parser.add_argument('--tablemaster_checkpoint', type=str,
+                            default='/home/ravi/Desktop/MTL_tabnet/PubTabNet/epoch_19.pth',
+                            help='tablemaster checkpoint file')
+        parser.add_argument('--out_dir',
+                            type=str, default='/home/ravi/Desktop/MTL_tabnet/PubTabNet/', help='Dir to save results')
+        args = parser.parse_args()
 
-    print("Time taken for Argument Parsing: %s seconds" % (time.time() - start_time))
+        print("Time taken for Argument Parsing: %s seconds" % (time.time() - start_time))
 
-    import sys
-    import codecs
-    sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
-    import subprocess
+        import sys
+        import codecs
+        sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
+        import subprocess
+        print("started compiling image.py")
+        subprocess.call(['python3', '/home/ravi/Desktop/Layout Parser/image.py'])
+        print("completed running image.py subprogram")
+        cropped_folder = '/home/ravi/Desktop/Layout Parser/cropped'
+        cropped_images = os.listdir(cropped_folder)
 
-    subprocess.call(['python3', '/home/ravi/Desktop/Layout Parser/image.py'])
+        # Read mapping from output.json file generated by image.py subprocess
+        with open('/home/ravi/Desktop/Layout Parser/cropped/output.json', 'r') as json_in:
+            mapping_list = json.load(json_in)
 
-    cropped_folder = '/home/ravi/Desktop/Layout Parser/cropped'
-    cropped_images = os.listdir(cropped_folder)
+        for mapping_dict in mapping_list:
+            page_id = mapping_dict['page']
+            table_id = mapping_dict['tableNumber']
+            img_name = f'page_{page_id}table_{table_id}.jpg'
+            img_path = os.path.join(cropped_folder, img_name)
 
-    mapping_list = []
+            # table structure predict
+            tablemaster_inference = Structure_Recognition(args.tablemaster_config, args.tablemaster_checkpoint)
+            tablemaster_result, tablemaster_result_dict = tablemaster_inference.predict_single_file(img_path)
+            torch.cuda.empty_cache()
+            del tablemaster_inference
+            print("Time taken for Table Structure Prediction: %s seconds" % (time.time() - start_time))
+            pred_text = tablemaster_result_dict[img_name]['text']
+            pred_cells = tablemaster_result_dict[img_name]['cell']
+            pred_html = insert_text_to_token(text_to_list(pred_text), pred_cells)
+            pred_html = deal_bb(pred_html, 'thead')
+            pred_html = deal_bb(pred_html, 'tbody')
 
-    for img_name in cropped_images:
-        img_path = os.path.join(cropped_folder, img_name)
+            # Add <table> at the start and </table> at the end of pred_html
+            pred_html = '<table>' + pred_html + '</table>'
 
-        # table structure predict
-        tablemaster_inference = Structure_Recognition(args.tablemaster_config, args.tablemaster_checkpoint)
-        tablemaster_result, tablemaster_result_dict = tablemaster_inference.predict_single_file(img_path)
-        torch.cuda.empty_cache()
-        del tablemaster_inference
-        print("Time taken for Table Structure Prediction: %s seconds" % (time.time() - start_time))
-        pred_text = tablemaster_result_dict[img_name]['text']
-        pred_cells = tablemaster_result_dict[img_name]['cell']
-        pred_html = insert_text_to_token(text_to_list(pred_text), pred_cells)
-        pred_html = deal_bb(pred_html, 'thead')
-        pred_html = deal_bb(pred_html, 'tbody')
+            # visualize bboxes
+            # visual_pred_bboxes(tablemaster_result_dict[img_name]['bbox'], img_name, './table_recognition/demo/', './table_recognition/demo/')
 
-        # Add <table> at the start and </table> at the end of pred_html
-        pred_html = '<table>' + pred_html + '</table>'
+            # with open(os.path.join('./table_recognition/demo/visual_pred_bboxes/', img_name.replace('.png', '.txt')), 'w') as f:
+            #     f.write(pred_html + '\n')
+            print("Time taken for Visualization: %s seconds" % (time.time() - start_time))
 
-        # visualize bboxes
-        # visual_pred_bboxes(tablemaster_result_dict[img_name]['bbox'], img_name, './table_recognition/demo/', './table_recognition/demo/')
+            print(pred_html)
 
-        # with open(os.path.join('./table_recognition/demo/visual_pred_bboxes/', img_name.replace('.png', '.txt')), 'w') as f:
-        #     f.write(pred_html + '\n')
-        print("Time taken for Visualization: %s seconds" % (time.time() - start_time))
+            # Add HTML representation of table to mapping_dict
+            mapping_dict['htmlTable'] = pred_html
 
-        print(pred_html)
+        # Save updated mapping to output2.json file
+        with open("output2.json", 'w') as json_out:
+            json.dump(mapping_list, json_out, indent=4)
 
-        # Generate mapping between image and HTML table element
-        mapping_dict = {
-            "tableID": img_name.replace('.png', ''),
-            "htmlTable": pred_html
-        }
-
-        mapping_list.append(mapping_dict)
-
-    # Overwrite the output.json file with the updated mapping
-    with open("output.json", 'w') as json_out:
-        json.dump(mapping_list, json_out, indent=4)
-
-    print("Mapping updated successfully in output.json.")
+        print("Mapping updated successfully in output2.json.")
